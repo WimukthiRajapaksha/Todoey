@@ -11,9 +11,13 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["aaaa","bbbb","cccc","dddd"]
+    let defaults=UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items=defaults.array(forKey: "TodoListArray") as? [String]{
+            itemArray=items
+        }
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -31,7 +35,7 @@ class TodoListViewController: UITableViewController {
         
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
+//        print(itemArray[indexPath.row])
 //        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
@@ -48,8 +52,13 @@ class TodoListViewController: UITableViewController {
         
         let alert=UIAlertController(title: "add new todoe item", message: "aaaa", preferredStyle: .alert)
         let action=UIAlertAction(title: "add item", style: .default) { (action) in
-            print(textField.text)
+            print(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            
             self.itemArray.append(textField.text!)
+            
+            
             self.tableView.reloadData()
         }
         alert.addTextField { (alertTF) in
